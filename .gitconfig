@@ -3,9 +3,26 @@
 	email = 
 [core]
 	excludesfile = /Users/jankrag/.gitignore_global
+	quotepath = off
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
 	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
 	trustExitCode = true
+[credential]
+	helper = osxkeychain
+[alias]
+	# fetch and show what would be merged (use option "-p" to see patch)
+    incoming = "!git remote update -p; git log ..@{u}"
+    in = "!git remote update -p; git log ..@{u}"
+
+    # what would be pushed (currently committed); see also alias difr
+    outgoing = log @{u}..
+    out = log @{u}..
+  	st = status
+  	branches = branch
+	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
+	ss = status -sb
+[color]
+	ui = true
