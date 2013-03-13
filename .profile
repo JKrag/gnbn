@@ -1,6 +1,7 @@
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 export LSCOLORS=GxFxCxDxBxegedabagaced
+alias ..='cd ..'
 alias ll='ls -al'
 alias mw='cd /Users/jankrag/Documents/workspaces/hg'
 alias joep='cd /Users/jankrag/Documents/workspaces/hg/Joep'
@@ -14,3 +15,7 @@ alias hgs='echo;echo "STATUS";hg st;echo;echo "SUMMARY";hg sum;echo;echo "INCOMI
 alias hgrc='vi ~/.hgrc'
 alias activate="osascript -e 'tell application \"System Events\" to activate'"
 alias gotosleep="osascript -e 'tell application \"System Events\" to sleep'"
+alias boss='cd /Users/jankrag/Documents/workspaces/BOSS'
+alias nlp='cd /Users/jankrag/Documents/workspaces/BOSS/nlp'
+alias advice='cd /Users/jankrag/Documents/workspaces/BOSS/advice'
+alias coreweb='cd /Users/jankrag/Documents/workspaces/BOSS/coreweb'
