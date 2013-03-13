@@ -1,3 +1,6 @@
+export CLICOLOR=1
+export GREP_OPTIONS='--color=auto'
+export LSCOLORS=GxFxCxDxBxegedabagaced
 alias ll='ls -al'
 alias mw='cd /Users/jankrag/Documents/workspaces/hg'
 alias joep='cd /Users/jankrag/Documents/workspaces/hg/Joep'
