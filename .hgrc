@@ -40,6 +40,7 @@ delay = 1.0
 cacerts = /etc/hg-dummy-cert.pem
  
 [color]
+mode = auto
 summary.branch = cyan bold
 status.modified = cyan
 status.added = green
@@ -56,6 +57,10 @@ diff.deleted = red
 diff.inserted = green
 diff.changed = white
 diff.trailingwhitespace = white_background
+branches.active = green bold
+branches.closed = blue
+branches.current = green
+branches.inactive = none
 
 [alias]
 #update = update -c
