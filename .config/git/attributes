@@ -1,0 +1,4 @@
+*.xls diff=xlsconv
+*.doc diff=docconv
+*.docx diff=docconv
+*.pdf diff=pdfconv

@@ -38,3 +38,9 @@
 	wordregex = [[:alnum:]]+|[^[:space:]]
 [color "diff"]
 	new = cyan bold
+[diff "xlsconv"]
+	textconv=xls2csv
+[diff "pdfconv"]
+	textconv=pdftohtml -stdout
+[diff "docconv"]
+	textconv=catdoc
