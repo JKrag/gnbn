@@ -33,6 +33,9 @@
 	wdiff = diff -w --word-diff=color
 	#glog = log --oneline --abbrev-commit --all --graph --decorate
 	glog = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate --all --graph 
+	remotebranch = rev-parse --symbolic-full-name --abbrev-ref @{u}
+	cbranch = rev-parse --abbrev-ref HEAD
+	curbranch = symbolic-ref --short HEAD
 [color]
 	ui = true
 [diff]
