@@ -63,5 +63,10 @@ fi
 alias wget="curl -O"
 
 whichl() { readlink `which $@`;}
+lt() { ls -ltrsa "$@" | tail; }
+psgrep() { ps axu | grep -v grep | grep "$@" -i --color=auto; }
+fname() { find . -iname "*$@*"; }
+mcd() { mkdir $1 && cd $1; }
+
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
