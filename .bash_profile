@@ -63,7 +63,7 @@ fi
 alias wget="curl -O"
 
 whichl() { readlink `which $@`;}
-lt() { ls -ltrsa "$@" | tail; }
+lt() { env CLICOLOR_FORCE=1 ls -GFltra "$@" | tail; }
 psgrep() { ps axu | grep -v grep | grep "$@" -i --color=auto; }
 fname() { find . -iname "*$@*"; }
 mcd() { mkdir $1 && cd $1; }
