@@ -16,7 +16,7 @@ if [ -f /usr/local/git/contrib/completion/git-completion.bash ]; then
 fi
 if [[ "$TERM_PROGRAM" != "DTerm" ]]; then
 	if [ -f `brew --prefix`/etc/bash_completion ]; then
-	    . `brew --prefix`/etc/bash_completion
+		. `brew --prefix`/etc/bash_completion
 	fi
 	source ~/.hg_bash_completion
 	[[ $- == *i* ]]   &&   . /Users/jankrag/Documents/github/git-prompt/git-prompt.sh
@@ -26,8 +26,8 @@ fi
 #    . /Users/jankrag/Documents/github/git-prompt/git-prompt.sh
 #fi
 #GIT_PS1_SHOWDIRTYSTATE=true
- 
- 
+
+
 #export PS1='\[\033[32m\]\u@\h\[\033[00m\]:\[\033[34m\]\w\[\033[31m\]$(__git_ps1)\[\033[00m\]\$ '
 
 
@@ -40,7 +40,7 @@ fi
 #BC=$'\e[34;46m'
 #CB=$'\e[36'
 #CY=$'\e[36;43m'
-#BY=$'\e[1;30;43m' 
+#BY=$'\e[1;30;43m'
 #YP=$'\e[33;45m'
 #BP=$'\e[30;45m'
 #PB=$'\e[35'
@@ -62,10 +62,19 @@ fi
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
 alias wget="curl -O"
 
+# find the actual "source" of a symlinked command, e.g. 'whichl sbt': ../Cellar/sbt/0.13.0/bin/sbt  ('which sbt' would print /usr/local/bin/sbt )
 whichl() { readlink `which $@`;}
+
+# nicely formatted and paged ls.
 lt() { env CLICOLOR_FORCE=1 ls -GFltra "$@" | tail; }
+
+# list processes matching search-term, and highlight search term match
 psgrep() { ps axu | grep -v grep | grep "$@" -i --color=auto; }
+
+#easy case insensitive search for file name pattern
 fname() { find . -iname "*$@*"; }
+
+#create a new dir and cd into it.
 mcd() { mkdir $1 && cd $1; }
 
 ### Added by the Heroku Toolbelt
