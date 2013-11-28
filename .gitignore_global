@@ -1,3 +1,6 @@
 *~
 .DS_Store
 *.rktcov
+infinitest.args
+infinitest.filters
+test-output/
