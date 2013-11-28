@@ -2,3 +2,10 @@
 *.doc diff=docconv
 *.docx diff=docconv
 *.pdf diff=pdfconv
+*.mdzip diff=zip
+*.pptx diff=zip
+*.docx diff=zip
+*.png diff=exif
+*.jpg diff=exif
+*.jpeg diff=exif
+*.gif diff=exif

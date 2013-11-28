@@ -49,3 +49,8 @@
 	textconv=pdftohtml -stdout
 [diff "docconv"]
 	textconv=catdoc
+[diff "zip"]
+	textconv=unzip -c -a
+[diff "exif"]
+	textconv=exiftool
+
