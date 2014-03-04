@@ -89,6 +89,13 @@ up () {
         cd $UP
         UP=''
 }
+ht() {
+    head -1 $1 && tail -1 $1 && echo
+}
+# bu <filename>
+# make local copy of file with appended .backup-<date>
+bu() { cp "$@" "$@".backup-`date +%Y-%m-%d`; }
+
 # coloured man pages: http://www.cyberciti.biz/faq/linux-unix-colored-man-pages-with-less-command/
 man() {
 	env \
