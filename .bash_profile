@@ -60,7 +60,6 @@ fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
-alias wget="curl -O"
 
 # find the actual "source" of a symlinked command, e.g. 'whichl sbt': ../Cellar/sbt/0.13.0/bin/sbt  ('which sbt' would print /usr/local/bin/sbt )
 whichl() { readlink `which $@`;}

@@ -25,6 +25,7 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
+alias wget="curl -O"
 #reload .bash_profile
 alias rebash='source ~/.bash_profile'
 #reload .profile
