@@ -24,15 +24,17 @@
     # what would be pushed (currently committed); see also alias difr
     outgoing = log @{u}..
     out = log @{u}..
+    sout = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate @{u}..
 	st = status
 	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
 	ss = status -sb
 	slog = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	summary = log --pretty=format:'Commit: %h %d%nParents: %p%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
-	sum = summary
-	wdiff = diff -w --word-diff=color
+	glog2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+	glog = log --graph --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate --all
+
+	sum = log --pretty=format:'Commit: %h %d%nParents: %p%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
+	wdiff = diff -w --word-diff=color --ignore-space-at-eol
 	#glog = log --oneline --abbrev-commit --all --graph --decorate
-	glog = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate --all --graph
 	remotebranch = rev-parse --symbolic-full-name --abbrev-ref @{u}
 	cbranch = rev-parse --abbrev-ref HEAD
 	curbranch = symbolic-ref --short HEAD
