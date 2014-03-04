@@ -76,5 +76,18 @@ fname() { find . -iname "*$@*"; }
 #create a new dir and cd into it.
 mcd() { mkdir $1 && cd $1; }
 
+# up -> go up 1 directory
+# up 4 -> go up 4 directories
+up () {
+        COUNTER=$1
+        while [[ $COUNTER -gt 0 ]]
+         do
+          UP="${UP}../"
+          COUNTER=$(( $COUNTER -1 ))
+         done
+        echo "cd $UP"
+        cd $UP
+        UP=''
+}
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"

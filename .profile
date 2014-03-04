@@ -17,10 +17,20 @@ alias gas='gitall status'
 alias gasr='gitall -qq st --porcelain'
 alias gap='gitall push'
 alias finderfix='sudo killall -KILL appleeventsd'
+#fast cd up commands
+#alternatively use 'up' function defined in my bash_profile
+# up -> go up 1 directory
+# up 4 -> go up 4 directories
+alias cd..='cd ..'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
+alias ..2='cd ../..'
+alias ..3='cd ../../..'
+alias ..4='cd ../../../..'
+alias ..5='cd ../../../../..'
+
 alias wget="curl -O"
 #reload .bash_profile
 alias rebash='source ~/.bash_profile'
