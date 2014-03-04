@@ -6,8 +6,11 @@ alias fr='cd /Users/jankrag/Documents/workspaces/fr'
 alias tmc='cd /Users/jankrag/Documents/workspaces/TMC/TMC'
 alias hgs='echo;echo "STATUS";hg st;echo;echo "SUMMARY";hg sum;echo;echo "INCOMING";hg inc;echo;echo "OUTGOING";hg out'
 alias hgrc='vi ~/.hgrc'
-alias activate="osascript -e 'tell application \"System Events\" to activate'"
+#put my laptop into sleep mode
 alias gotosleep="osascript -e 'tell application \"System Events\" to sleep'"
+#wake up laptop from sleep - and yes, this is usefull as you can ssh into laptop while its sleeping
+alias activate="osascript -e 'tell application \"System Events\" to activate'"
+
 alias gf='git flow'
 alias gff='git flow feature'
 alias gffs='git flow feature start'
