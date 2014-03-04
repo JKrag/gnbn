@@ -3,6 +3,7 @@
 *.docx diff=docconv
 *.pdf diff=pdfconv
 *.mdzip diff=zip
+*.mdzip.bak diff=zip
 *.pptx diff=zip
 *.docx diff=zip
 *.png diff=exif
