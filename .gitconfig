@@ -42,6 +42,12 @@
 	last = show -s HEAD^{commit}
 	lastm = "!git last | tail -n+5 | sed -e 's/^[ \t]*//'"
 	lastpb = "!git lastm | perl -ne 'chomp and print' | pbcopy"
+	rawst = "!git status --porcelain | grep '^ . '"
+	gg = git grep -En
+	rblame = !sh -c 'while line=$(git blame "$@" $commit 2>/dev/null); do commit=${line:0:8}^; [ 00000000^ == $commit ] && commit=$(git rev-parse HEAD); echo $line; done' dumb_param
+	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+	branchroot = diff -u <(git log --pretty=oneline branch_A) <(git log --pretty=oneline master) | tail -1 | cut -c 2-42
+	start = !git init && git commit --allow-empty -m \"Initial commit\"
 [color]
 	ui = true
 [diff]
