@@ -50,6 +50,7 @@ alias rebash='source ~/.bash_profile'
 alias repro='source ~/.profile'
 #Get BOFH excuse
 alias bofh='telnet towel.blinkenlights.nl 666 2>/dev/null |tail -2'
+alias bofd='telnet towel.blinkenlights.nl 666 2>/dev/null |tail -2 | cowsay -f dragon | lolcat'
 #Mac OSX - show battery status
 alias battery="pmset -g batt | egrep '([0-9]+\%).*' -o --colour=auto | cut -f1 -d';'"
 # print the top 10 most frequent git commands to look for candidates for git aliases
@@ -58,6 +59,12 @@ alias frequentgitall='history | cut -c 8- | grep ga | sort | uniq -c  | sort -n 
 # print stats of most frequent bash commands to look for candidates for aliases
 alias frequent='history | cut -c 8- | sort | uniq -c  | sort -n -r | head -n 10'
 
+alias fastping='ping -c 20 -i.1'
+alias watchtail='watch -n .5 tail -n 20'
+alias watchdir='watch -n .5 ls -la'
 #cat print source files with syntax highlighting. Uses Pythons Pygments module (http://pygments.org/)
 #http://stackoverflow.com/questions/7851134/syntax-highlighting-colorizing-cat/7855793#7855793
 alias catc='pygmentize -g'
+
+#alias my own clone of 'q' command for testing changes before sending pull-request, but still allowing use of the brew installed one
+alias jq='~/Documents/github/q/q'
