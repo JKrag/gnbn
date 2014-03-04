@@ -109,6 +109,19 @@ man() {
 			man "$@"
 }
 
+# Git dashboard (w (show dashboard), dn (diff next), an (add next))
+# https://gist.github.com/arialdomartini/721c2be0d4edc6f0b5ac
+# http://arialdomartini.wordpress.com/2014/03/03/a-dead-stupid-yet-effective-git-dashboard-in-3-lines-of-bash/
+w() {
+    clear &&  ls -l && echo && git branch && echo && git status --short --branch
+}
+dn() {
+    git status --short --branch | grep '^.[DM\?]' | head -1 | awk '$1 ~ /[MD]/ {print $2} $1 ~ /\?/ {print "/dev/null " $2}' | xargs git diff -- && w
+}
+an() {
+    git status --short --branch | grep '^.[DM\?]' | head -1 | awk '$1 ~ /[M?]/ {print "add " $2} $1 ~ /D/ {print "rm " $2}' | xargs git && w
+}
+
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
