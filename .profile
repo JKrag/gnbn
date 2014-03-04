@@ -14,9 +14,15 @@ alias gffs='git flow feature start'
 alias ga='gitall'
 alias gau='gitall up'
 alias gas='gitall status'
+alias gac='gitall -qq curbranch'
 alias gasr='gitall -qq st --porcelain'
+alias gras='gitall -qq rawst'
+alias gu='gitall -e unitlinked'
+alias ss='gitall -nq status -sb'
+alias ssq='gitall -qq status -sb'
 alias gap='gitall push'
 alias finderfix='sudo killall -KILL appleeventsd'
+
 #fast cd up commands
 #alternatively use 'up' function defined in my bash_profile
 # up -> go up 1 directory
@@ -32,6 +38,9 @@ alias ..4='cd ../../../..'
 alias ..5='cd ../../../../..'
 
 alias wget="curl -O"
+
+#alias git=hub
+
 #reload .bash_profile
 alias rebash='source ~/.bash_profile'
 #reload .profile
