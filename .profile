@@ -58,3 +58,6 @@ alias frequentgitall='history | cut -c 8- | grep ga | sort | uniq -c  | sort -n 
 # print stats of most frequent bash commands to look for candidates for aliases
 alias frequent='history | cut -c 8- | sort | uniq -c  | sort -n -r | head -n 10'
 
+#cat print source files with syntax highlighting. Uses Pythons Pygments module (http://pygments.org/)
+#http://stackoverflow.com/questions/7851134/syntax-highlighting-colorizing-cat/7855793#7855793
+alias catc='pygmentize -g'
