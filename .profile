@@ -1,6 +1,14 @@
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 export LSCOLORS=GxFxCxDxBxegedabagaced
+export HISTIGNORE="&:ll:[bf]g:exit"
+export HISTCONTROL=ignoredups
+export EDITOR=vi
+export HISTFILESIZE=100000000
+export HISTSIZE=1000
+shopt -s histappend #tell the shell to always append the history to the HISTFILE.
+shopt -s histverify # verify command substitutions before the shell executes them
+export PROMPT_COMMAND="$PROMPT_COMMAND;history -a"
 alias git="git-achievements"
 
 alias ll='ls -alF'
