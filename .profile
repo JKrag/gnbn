@@ -1,6 +1,8 @@
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 export LSCOLORS=GxFxCxDxBxegedabagaced
+alias git="git-achievements"
+
 alias ll='ls -alF'
 alias fr='cd /Users/jankrag/Documents/workspaces/fr'
 alias tmc='cd /Users/jankrag/Documents/workspaces/TMC/TMC'
@@ -25,6 +27,11 @@ alias ss='gitall -nq status -sb'
 alias ssq='gitall -qq status -sb'
 alias gap='gitall push'
 alias finderfix='sudo killall -KILL appleeventsd'
+alias g1='git l1'
+alias g5='git l5'
+alias g10='git l10'
+alias g20='git l20'
+alias gt='git-show-tree'
 
 #fast cd up commands
 #alternatively use 'up' function defined in my bash_profile

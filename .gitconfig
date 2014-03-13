@@ -48,6 +48,10 @@
 	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
 	branchroot = diff -u <(git log --pretty=oneline branch_A) <(git log --pretty=oneline master) | tail -1 | cut -c 2-42
 	start = !git init && git commit --allow-empty -m \"Initial commit\"
+	l1 = log -1 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	l5 = log -5 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	l10 = log -10 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	l20 = log -20 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
 [color]
 	ui = true
 [diff]

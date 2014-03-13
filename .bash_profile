@@ -126,4 +126,3 @@ an() {
 export PATH="/usr/local/heroku/bin:$PATH"
 
 export PATH="$PATH:/Users/jankrag/Documents/github/git-achievements"
-alias git="git-achievements"
