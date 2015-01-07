@@ -18,40 +18,49 @@
 	helper = osxkeychain
 [alias]
 	# fetch and show what would be merged (use option "-p" to see patch)
-    incoming = "!git remote update -p; git log ..@{u}"
-    in = "!git remote update -p; git log ..@{u}"
+	incoming = "!git remote update -p; git log ..@{u}"
+	in = "!git remote update -p; git log ..@{u}"
 
-    # what would be pushed (currently committed); see also alias difr
-    outgoing = log @{u}..
-    out = log @{u}..
-    sout = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate @{u}..
+	# what would be pushed (currently committed); see also alias difr
+	outgoing = log @{u}..
+	out = log @{u}..
+	sout = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate @{u}..
+
 	st = status
-	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
 	ss = status -sb
+	rawst = "!git status --porcelain | grep '^ . '"
+
+	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
+
 	slog = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	sum = log --pretty=format:'Commit: %h %d%nParents: %p%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
+
 	glog2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	glog = log --graph --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate --all
+	#glog = log --graph --oneline --abbrev-commit --all  --decorate
 
-	sum = log --pretty=format:'Commit: %h %d%nParents: %p%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
 	wdiff = diff -w --word-diff=color --ignore-space-at-eol
-	#glog = log --oneline --abbrev-commit --all --graph --decorate
+
 	remotebranch = rev-parse --symbolic-full-name --abbrev-ref @{u}
 	cbranch = rev-parse --abbrev-ref HEAD
 	curbranch = symbolic-ref --short HEAD
 	branches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) %1B[34m%(committerdate:relative) %1B[0;m%(refname:short)' refs/heads/"
+
 	last = show -s HEAD^{commit}
 	lastm = "!git last | tail -n+5 | sed -e 's/^[ \t]*//'"
 	lastpb = "!git lastm | perl -ne 'chomp and print' | pbcopy"
-	rawst = "!git status --porcelain | grep '^ . '"
+
 	gg = git grep -En
 	rblame = !sh -c 'while line=$(git blame "$@" $commit 2>/dev/null); do commit=${line:0:8}^; [ 00000000^ == $commit ] && commit=$(git rev-parse HEAD); echo $line; done' dumb_param
 	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
 	branchroot = diff -u <(git log --pretty=oneline branch_A) <(git log --pretty=oneline master) | tail -1 | cut -c 2-42
-	start = !git init && git commit --allow-empty -m \"Initial commit\"
+
 	l1 = log -1 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
 	l5 = log -5 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
 	l10 = log -10 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
 	l20 = log -20 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	# init new git repo with empty initial commit
+	start = !git init && git commit --allow-empty -m \"Initial commit\"
 [color]
 	ui = true
 [diff]
