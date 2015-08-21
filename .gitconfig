@@ -17,6 +17,7 @@
 [credential]
 	helper = osxkeychain
 [alias]
+	thierry-pick = cherry-pick
 	# fetch and show what would be merged (use option "-p" to see patch)
 	incoming = "!git remote update -p; git log ..@{u}"
 	in = "!git remote update -p; git log ..@{u}"
@@ -36,7 +37,7 @@
 	ls =   log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
 	ll =   log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
 	sum = log --pretty=format:'Commit: %h %d%nParents: %p%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
-
+	slogbw = log --pretty=format:'%h %ad %an%d %s' --date=short --decorate
 	glog2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 	glog = log --graph --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate --all
 	#glog = log --graph --oneline --abbrev-commit --all  --decorate
@@ -46,8 +47,9 @@
 	remotebranch = rev-parse --symbolic-full-name --abbrev-ref @{u}
 	cbranch = rev-parse --abbrev-ref HEAD
 	curbranch = symbolic-ref --short HEAD
-	branches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) %1B[34m%(committerdate:relative) %1B[0;m%(refname:short)' refs/heads/"
-
+	#branches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) %1B[34m%(committerdate:relative) %1B[0;m%(refname:short)' refs/heads/"
+	branches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) (%(committerdate:relative)) %1B[34m%(refname:short)  %1B[32m<- %1B[31m%(upstream:short)%1B[0;m %1B[32m [%(objectname:short)] %1B[0;m' refs/heads/"
+	remotebranches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) (%(committerdate:relative)) %1B[34m%(objectname:short)  %1B[32m<- %1B[31m%(refname:short)%1B[0;m' refs/remotes/"
 	last = show -s HEAD^{commit}
 	lastm = "!git last | tail -n+5 | sed -e 's/^[ \t]*//'"
 	lastpb = "!git lastm | perl -ne 'chomp and print' | pbcopy"
@@ -57,11 +59,6 @@
 	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
 	branchroot = diff -u <(git log --pretty=oneline branch_A) <(git log --pretty=oneline master) | tail -1 | cut -c 2-42
 
-	l1 = log -1 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	l5 = log -5 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	l10 = log -10 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	l20 = log -20 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-
 	# http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
 	# what changed in last command (e.g. pull)
 	new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
@@ -69,7 +66,7 @@
 	dl = "!git ll -1"
 	#Show a diff last commit:
 	dlc = diff --cached HEAD^
-	
+
 	#list all defined aliases
 	aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\t=> \\2/' | sort
 
@@ -79,6 +76,31 @@
 	# init new git repo with empty initial commit
 	start = !git init && git commit --allow-empty -m \"Initial commit\"
 
+	l1 = !git log -1 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	l5 = !git log -5 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	l10 = !git log -10 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	l20 = !git log -20 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
+	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         %C(black)[%cr]%C(reset)  %x09%C(black)%an: %s %C(reset)'
+	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+	exportalias = "!f() { in=${1}; out=$(git config --get alias.$in) ; printf 'git config --global alias.%s %q\n' $in \"$out\";};f"
+    stree = !bash -c '"                                                                             \
+        while IFS=+ read -r hash time branch message; do                                            \
+            timelength=$(echo \"$time\" | sed -E \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
+            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
+            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"\";          \
+        done < <(git logx && echo);"'
+    vtree = !bash -c '"                                                                             \
+        while IFS=+ read -r hash time branch message; do                                            \
+            timelength=$(echo \"$time\" | sed -E \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
+            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
+            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"$message\";  \
+        done < <(git logx && echo);"'
+	cm = commit -m
+	amend = commit --amend
+	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
+	#safereset = !git commit -av -m "SAFE_RESET - `date`" && git reset --hard HEAD~1
+	orphank = !gitk --all `git reflog | cut -c1-7`&
+	orphanl = !git log --pretty=oneline --abbrev-commit --graph --decorate `git reflog | cut -c1-7`
 [color]
 	ui = true
 [diff]
@@ -100,3 +122,5 @@
 	upload = true
 [push]
 	default = simple
+[rerere]
+	autoupdate = true
