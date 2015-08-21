@@ -9,6 +9,9 @@ export HISTSIZE=1000
 shopt -s histappend #tell the shell to always append the history to the HISTFILE.
 shopt -s histverify # verify command substitutions before the shell executes them
 export PROMPT_COMMAND="$PROMPT_COMMAND;history -a"
+
+#set -o vi
+
 alias git="git-achievements"
 
 alias ll='ls -alF'
@@ -83,3 +86,4 @@ alias catc='pygmentize -g'
 
 #alias my own clone of 'q' command for testing changes before sending pull-request, but still allowing use of the brew installed one
 alias jq='~/Documents/github/q/q'
+

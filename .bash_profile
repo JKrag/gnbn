@@ -18,9 +18,13 @@ if [[ "$TERM_PROGRAM" != "DTerm" ]]; then
 	if [ -f `brew --prefix`/etc/bash_completion ]; then
 		. `brew --prefix`/etc/bash_completion
 	fi
-	source ~/.hg_bash_completion
+	#source ~/.hg_bash_completion
 	[[ $- == *i* ]]   &&   . /Users/jankrag/Documents/github/git-prompt/git-prompt.sh
 fi
+#if [ -f ~/.config/exercism/exercism_completion.bash ]; then
+#    . ~/.config/exercism/exercism_completion.bash
+#fi
+
 
 #if [ -f /Users/jankrag/Documents/github/git-prompt/git-prompt.sh ]; then
 #    . /Users/jankrag/Documents/github/git-prompt/git-prompt.sh

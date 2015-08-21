@@ -66,3 +66,4 @@ sbt
 smlnj
 sqlite
 tig
+ag (the silver surfer - ack/grep replacement)
