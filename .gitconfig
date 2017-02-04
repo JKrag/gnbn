@@ -6,10 +6,11 @@
 	quotepath = off
 	precomposeunicode = true
 	autocrlf = input
+	pager = less -F -X
 	#whitespace = cr-at-eol
 	#safecrlf = true
  [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
 	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
@@ -101,6 +102,22 @@
 	#safereset = !git commit -av -m "SAFE_RESET - `date`" && git reset --hard HEAD~1
 	orphank = !gitk --all `git reflog | cut -c1-7`&
 	orphanl = !git log --pretty=oneline --abbrev-commit --graph --decorate `git reflog | cut -c1-7`
+	co = checkout
+	panic = !PD=$(date +%d%m%y-%H%M) && git add -A && git commit -m"WAAAAAAAAGH!!" && git checkout -B PANIC-$USER-$PD && git push -f origin PANIC-$USER-$PD
+	drunk = !PD=$(date +%d%m%y-%H%M) && git add -A && git commit -m"Is this brilliant.... or not???" && git checkout -B $USER-WAS-DRUNK-$PD && git push -f origin $USER-WAS-DRUNK-$PD
+	wshow = show -w --word-diff=color --ignore-space-at-eol
+	s = status
+
+	#Praqmatic workflow aliases:
+	addremove = add -A .
+	deliver = "!BRANCH=`git symbolic-ref --short HEAD`;REMOTEBRANCH=ready/$BRANCH;   git push origin $BRANCH:$REMOTEBRANCH && git branch -m delivered/$BRANCH"
+	co = checkout
+	wrapup = "!f() { MSG='close #'`git symbolic-ref --short HEAD | sed 's/-/ /g'`; echo $MSG > ~/WRAPUP_EDITMSG; git addremove; git commit -F ~/WRAPUP_EDITMSG; rm ~/WRAPUP_EDITMSG; }; f"
+	purge-all-delivered = "!f() { git co `git default-branch`; git branch | grep 'delivered/' |   sed 's/delivered\\///g' | xargs -I %br sh -c 'git branch -D delivered/%br; git   push origin :%br' 2>/dev/null; }; f "
+	default-branch = "!f(){ if git show-ref refs/heads/master >/dev/null 2>&1; then   echo master; elif git show-ref refs/heads/gh-pages >/dev/null 2>&1; then echo   gh-pages; fi; }; f"
+	issue-branch = "!f() { MATCH=#$1:; ghi show $1 2>/dev/null | grep $MATCH | sed   s/$MATCH/$1/g | sed 's/ /-/g' | sed s/[:\\']//g; }; f"
+	issue-wip = "!f() { ghi label $1 'Status - in progress'; }; f"
+	work-on	= "!f() { BRANCH=`git issue-branch $1`; git fetch origin; git co $BRANCH   2> /dev/null || git co -b $BRANCH origin/`git default-branch`; git issue-wip $1; ghi assign $1;  }; f"
 [color]
 	ui = true
 [diff]
@@ -113,14 +130,34 @@
 	textconv=pdftohtml -stdout
 [diff "docconv"]
 	textconv=catdoc
+[diff "pandoc2md"]
+	textconv=pandoc --to=markdown
 [diff "zip"]
 	textconv=unzip -c -a
 [diff "exif"]
 	textconv=exiftool
-
+	cachetextconv = true
+[diff "jpg"]
+	textconv=jp2a --width=80
+	cachetextconv = true
 [achievement]
 	upload = true
 [push]
 	default = simple
 [rerere]
 	autoupdate = true
+[github]
+	user = JKrag
+[ghi]
+	token = !security find-internet-password -a JKrag -s github.com -l 'ghi token' -w
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+[mergetool "p4mergetool"]
+	cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge $PWD/$BASE $PWD/$REMOTE $PWD/$LOCAL $PWD/$MERGED
+	trustExitCode = false
+[merge]
+	tool = p4mergetool
+[mergetool]
+	keepBackup = false
