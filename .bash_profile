@@ -135,3 +135,4 @@ lmv() {
 export PATH="/usr/local/heroku/bin:$PATH"
 
 export PATH="$PATH:/Users/jankrag/Documents/github/git-achievements"
+export PATH="/usr/local/sbin:$PATH"
