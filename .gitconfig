@@ -9,80 +9,115 @@
 	pager = less -F -X
 	#whitespace = cr-at-eol
 	#safecrlf = true
- [difftool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/p4merge.app/Contents/MacOS/p4merge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
-	trustExitCode = true
 [credential]
 	helper = osxkeychain
+
+[mergetool "p4merge"]
+	cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge $PWD/$BASE $PWD/$REMOTE $PWD/$LOCAL $PWD/$MERGED
+	trustExitCode = false
+
+[merge]
+	tool = p4merge
+
+[mergetool]
+	keepBackup = false
+
+[mergetool "meld"]
+	    # Choose one of these 2 lines (not both!)
+	    cmd = meld "$LOCAL" "$MERGED" "$REMOTE" --output "$MERGED"
+#	    cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
+
+[mergetool "kdiff3"]
+		cmd = kdiff3 $BASE $LOCAL $REMOTE -o $MERGED
+
+[mergetool "bc3"]
+	trustExitCode = true
+
 [alias]
 	thierry-pick = cherry-pick
+
 	# fetch and show what would be merged (use option "-p" to see patch)
 	incoming = "!git remote update -p; git log ..@{u}"
 	in = "!git remote update -p; git log ..@{u}"
+	inlog = slog @{u}
 
 	# what would be pushed (currently committed); see also alias difr
 	outgoing = log @{u}..
 	out = log @{u}..
-	sout = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate @{u}..
+	sout = log --pretty=format:'%C(auto)%h %C(red)%ad %C(blue)%aN%C(auto)%d %C(reset)%s' --date=short  @{u}..
 
+	s = status
 	st = status
-	ss = status -sb
-	rawst = "!git status --porcelain | grep '^ . '"
+  ss = status -sb
+	rawst = !git status --porcelain | grep '^ . '
 
 	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
 
-	slog = log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	ls =   log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
-	ll =   log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
-	sum = log --pretty=format:'Commit: %h %d%nParents: %p%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
+	slog = log --pretty=format:'%C(auto)%h %C(yellow)%C(red)%ad %C(blue)%aN%C(auto)%d%C(green) %s' --date=short
+	ls = log --pretty=format:%C(auto)%h%C(auto)%d\\ %Creset%s%Cblue\\ [%cn]
+	ll = log --pretty=format:%C(auto)%h%C(auto)%d\\ %Creset%s%Cblue\\ [%cn]  --numstat
+
+	sum = log --pretty=format:'Commit: %C(auto)%h %d%n%C(reset)Parents: %C(auto)%p%C(reset)%nAuthor: %aN <%ae>%nMessage: %s%n%b' -1
 	slogbw = log --pretty=format:'%h %ad %an%d %s' --date=short --decorate
-	glog2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-	glog = log --graph --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate --all
-	#glog = log --graph --oneline --abbrev-commit --all  --decorate
+	glog2 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%aN>%Creset' --abbrev-commit
+	glog = log --graph --pretty=format:'%C(auto)%h %C(red)%ad %C(blue)%aN%C(auto)%d %C(reset)%s' --date=short --all
+	glogdemo = log --graph --pretty=format:'%C(auto)%h %C(blue)%aN%C(auto)%d %C(reset)%<(30,trunc)%s' --decorate=short --all --color
+	glogdemo2 = log --graph --pretty=format:'%C(yellow)%h %Cblue%aN%Cgreen%d %Creset' --decorate=short --all --color
+#glog = log --graph --oneline --abbrev-commit --all  --decorate
 
 	wdiff = diff -w --word-diff=color --ignore-space-at-eol
 
 	remotebranch = rev-parse --symbolic-full-name --abbrev-ref @{u}
 	cbranch = rev-parse --abbrev-ref HEAD
 	curbranch = symbolic-ref --short HEAD
+
 	#branches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) %1B[34m%(committerdate:relative) %1B[0;m%(refname:short)' refs/heads/"
 	branches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) (%(committerdate:relative)) %1B[34m%(refname:short)  %1B[32m<- %1B[31m%(upstream:short)%1B[0;m %1B[32m [%(objectname:short)] %1B[0;m' refs/heads/"
 	remotebranches = "for-each-ref --sort=-committerdate --format='%1B[32m%(committerdate:iso8601) (%(committerdate:relative)) %1B[34m%(objectname:short)  %1B[32m<- %1B[31m%(refname:short)%1B[0;m' refs/remotes/"
+
 	last = show -s HEAD^{commit}
-	lastm = "!git last | tail -n+5 | sed -e 's/^[ \t]*//'"
-	lastpb = "!git lastm | perl -ne 'chomp and print' | pbcopy"
+	lastm = !git last | tail -n+5 | sed -e 's/^[ \t]*//'
+	lastpb = !git lastm | perl -ne 'chomp and print' | pbcopy
 
 	gg = git grep -En
-	rblame = !sh -c 'while line=$(git blame "$@" $commit 2>/dev/null); do commit=${line:0:8}^; [ 00000000^ == $commit ] && commit=$(git rev-parse HEAD); echo $line; done' dumb_param
-	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | sed -ne \"s/^ //p\" | head -1' -
+
+	rblame = !sh -c 'while line=$(git blame $@ $commit 2>/dev/null) ; do commit=${line:0:8}^; [ 00000000^ == $commit ] && commit=$(git rev-parse HEAD); echo $line; done' dumb_param
+	oldest-ancestor = !zsh -c 'diff -u <(git rev-list --first-parent ${1:-master}) <(git rev-list --first-parent ${2:-HEAD}) | sed -ne \"s/^ //p\" | head -1' -
 	branchroot = diff -u <(git log --pretty=oneline branch_A) <(git log --pretty=oneline master) | tail -1 | cut -c 2-42
 
 	# http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/
 	# what changed in last command (e.g. pull)
-	new = !sh -c 'git log $1@{1}..$1@{0} "$@"'
+	new = !sh -c 'git log $1@{1}..$1@{0} $@'
+
 	# Show modified files in last commit
-	dl = "!git ll -1"
+	dl = !git ll -1
+
 	#Show a diff last commit:
 	dlc = diff --cached HEAD^
 
 	#list all defined aliases
 	aliases = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\t=> \\2/' | sort
+	aliases2 = config --get-regexp alias
 
 	# create a git repo including everything in this dir
-	initthis = !git init && git add . && git commit -m \"initial commit\"
+	initthis = !git init && git add . && git commit -m \"Initial commit\"
 
 	# init new git repo with empty initial commit
 	start = !git init && git commit --allow-empty -m \"Initial commit\"
 
-	l1 = !git log -1 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	l5 = !git log -5 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	l10 = !git log -10 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	l20 = !git log -20 --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short --decorate
-	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         %C(black)[%cr]%C(reset)  %x09%C(black)%an: %s %C(reset)'
-	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+	l = !git log --pretty=format:'%C(auto)%h %Cred%ad %Cblue%aN%C(auto)%d %Creset%s' --date=short
+	l1 = !git l -1
+	l5 = !git l -5
+	l10 = !git l -10
+	l20 = !git l -20
+
+#	l1 = !git log -1 --pretty=format:'%C(auto)%h %Cred%ad %Cblue%aN%Cgreen%d %Creset%s' --date=short --decorate
+#	l5 = !git log -5 --pretty=format:'%C(auto)%h %Cred%ad %Cblue%aN%Cgreen%d %Creset%s' --date=short --decorate
+#	l10 = !git log -10 --pretty=format:'%C(auto)%h %Cred%ad %Cblue%aN%C(auto)%d %Creset%s' --date=short --decorate
+#	l20 = !git log -20 --pretty=format:'%C(auto)%h %Cred%ad %Cblue%aN%C(auto)%d %Creset%s' --date=short --decorate
+	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         %C(auto)[%cr]%C(reset)  %x09%C(auto)%aN: %s %C(reset)'
+	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%aN%C(reset)%C(black): %s%C(reset)'
+
 	exportalias = "!f() { in=${1}; out=$(git config --get alias.$in) ; printf 'git config --global alias.%s %q\n' $in \"$out\";};f"
     stree = !bash -c '"                                                                             \
         while IFS=+ read -r hash time branch message; do                                            \
@@ -98,47 +133,59 @@
         done < <(git logx && echo);"'
 	cm = commit -m
 	amend = commit --amend
+
 	whatis = show -s --pretty='tformat:%h (%s, %ad)' --date=short
 	#safereset = !git commit -av -m "SAFE_RESET - `date`" && git reset --hard HEAD~1
+
 	orphank = !gitk --all `git reflog | cut -c1-7`&
 	orphanl = !git log --pretty=oneline --abbrev-commit --graph --decorate `git reflog | cut -c1-7`
-	co = checkout
-	panic = !PD=$(date +%d%m%y-%H%M) && git add -A && git commit -m"WAAAAAAAAGH!!" && git checkout -B PANIC-$USER-$PD && git push -f origin PANIC-$USER-$PD
-	drunk = !PD=$(date +%d%m%y-%H%M) && git add -A && git commit -m"Is this brilliant.... or not???" && git checkout -B $USER-WAS-DRUNK-$PD && git push -f origin $USER-WAS-DRUNK-$PD
-	wshow = show -w --word-diff=color --ignore-space-at-eol
-	s = status
 
-	#Praqmatic workflow aliases:
-	addremove = add -A .
-	deliver = "!BRANCH=`git symbolic-ref --short HEAD`;REMOTEBRANCH=ready/$BRANCH;   git push origin $BRANCH:$REMOTEBRANCH && git branch -m delivered/$BRANCH"
 	co = checkout
-	wrapup = "!f() { MSG='close #'`git symbolic-ref --short HEAD | sed 's/-/ /g'`; echo $MSG > ~/WRAPUP_EDITMSG; git addremove; git commit -F ~/WRAPUP_EDITMSG; rm ~/WRAPUP_EDITMSG; }; f"
-	purge-all-delivered = "!f() { git co `git default-branch`; git branch | grep 'delivered/' |   sed 's/delivered\\///g' | xargs -I %br sh -c 'git branch -D delivered/%br; git   push origin :%br' 2>/dev/null; }; f "
-	default-branch = "!f(){ if git show-ref refs/heads/master >/dev/null 2>&1; then   echo master; elif git show-ref refs/heads/gh-pages >/dev/null 2>&1; then echo   gh-pages; fi; }; f"
-	issue-branch = "!f() { MATCH=#$1:; ghi show $1 2>/dev/null | grep $MATCH | sed   s/$MATCH/$1/g | sed 's/ /-/g' | sed s/[:\\']//g; }; f"
-	issue-wip = "!f() { ghi label $1 'Status - in progress'; }; f"
-	work-on	= "!f() { BRANCH=`git issue-branch $1`; git fetch origin; git co $BRANCH   2> /dev/null || git co -b $BRANCH origin/`git default-branch`; git issue-wip $1; ghi assign $1;  }; f"
+
+	panic = !PD=$(date +%d%m%y-%H%M) && git add -A && git commit -mWAAAAAAAAGH!! && git checkout -B PANIC-$USER-$PD && git push -f origin PANIC-$USER-$PD
+	drunk = !PD=$(date +%d%m%y-%H%M) && git add -A && git commit -mIs this brilliant.... or not??? && git checkout -B $USER-WAS-DRUNK-$PD && git push -f origin $USER-WAS-DRUNK-$PD
+	wshow = show -w --word-diff=color --ignore-space-at-eol
+	cleanup = phlow cleanup
+
+	# Which files are receiving the most "love" (http://michaelwales.com/articles/make-gitconfig-work-for-you/)
+	churn = !git log --all -M -C --name-only --format='format:' $@ | sort | grep -v '^$' | uniq -c | sort | awk 'BEGIN {print count,file} {print $1 , $2}'
+	# Thin out older metadata within the repository, reduces filesystem footprint
+	trim = !git reflog expire --expire=now --all && git gc --prune=now
+	first = rev-list --max-parents=0 HEAD
+	deletebranch = branch -d
 [color]
 	ui = true
 [diff]
 	wordregex = [[:alnum:]]+|[^[:space:]]
 [color "diff"]
-	new = cyan bold
+#	new = cyan bold
+#    meta = yellow bold
+#    frag = magenta bold
+#    old = red bold
+#    new = green bold
+[color "status"]
+#    added = yellow
+#    changed = blue
+#    untracked = red
+[color "branch"]
+#    current = yellow reverse
+#    local = yello
+#    remote = green
 [diff "xlsconv"]
-	textconv=xls2csv
+	textconv = xls2csv
 [diff "pdfconv"]
-	textconv=pdftohtml -stdout
+	textconv = pdftohtml -stdout
 [diff "docconv"]
-	textconv=catdoc
+	textconv = catdoc
 [diff "pandoc2md"]
-	textconv=pandoc --to=markdown
+	textconv = pandoc --to=markdown
 [diff "zip"]
-	textconv=unzip -c -a
+	textconv = unzip -c -a
 [diff "exif"]
-	textconv=exiftool
+	textconv = exiftool
 	cachetextconv = true
 [diff "jpg"]
-	textconv=jp2a --width=80
+	textconv = jp2a --width=80
 	cachetextconv = true
 [achievement]
 	upload = true
@@ -152,12 +199,19 @@
 	token = !security find-internet-password -a JKrag -s github.com -l 'ghi token' -w
 [filter "lfs"]
 	required = true
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
-[mergetool "p4mergetool"]
-	cmd = /Applications/p4merge.app/Contents/Resources/launchp4merge $PWD/$BASE $PWD/$REMOTE $PWD/$LOCAL $PWD/$MERGED
-	trustExitCode = false
-[merge]
-	tool = p4mergetool
-[mergetool]
-	keepBackup = false
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+# http://michaelwales.com/articles/make-gitconfig-work-for-you/
+# Allows: git clone gh:JKrag/GittingIt
+[url "https://github.com/"]
+    insteadOf = gh:
+[url "https://gist.github.com/"]
+    insteadOf = gist:
+[url "https://bitbucket.org/"]
+    insteadOf = bb:
+[gc]
+[protocol]
+	version = 2
+[uploadpack]
+	allowFilter = true
