@@ -28,9 +28,13 @@
 #	    cmd = meld "$LOCAL" "$BASE" "$REMOTE" --output "$MERGED"
 
 [mergetool "kdiff3"]
-		cmd = kdiff3 $BASE $LOCAL $REMOTE -o $MERGED
+		cmd = kdiff3 #$BASE $LOCAL $REMOTE -o $MERGED
+		trustExitCode = false
+[difftool "kdiff3"]
+	cmd = kdiff3
+    trustExitCode = false		
 
-[mergetool "bc3"]
+[mergetool "bc4"]
 	trustExitCode = true
 
 [alias]
@@ -53,7 +57,7 @@
 
 	rmbranch = "!f(){ git branch -d ${1} && git push origin --delete ${1}; };f"
 
-	slog = log --pretty=format:'%C(auto)%h %C(yellow)%C(red)%ad %C(blue)%aN%C(auto)%d%C(green) %s' --date=short
+	slog = log --pretty=format:'%C(auto)%h %C(red)%ad %C(blue)%aN%C(auto)%d%C(green) %s' --date=short
 	ls = log --pretty=format:%C(auto)%h%C(auto)%d\\ %Creset%s%Cblue\\ [%cn]
 	ll = log --pretty=format:%C(auto)%h%C(auto)%d\\ %Creset%s%Cblue\\ [%cn]  --numstat
 
@@ -119,18 +123,7 @@
 	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%aN%C(reset)%C(black): %s%C(reset)'
 
 	exportalias = "!f() { in=${1}; out=$(git config --get alias.$in) ; printf 'git config --global alias.%s %q\n' $in \"$out\";};f"
-    stree = !bash -c '"                                                                             \
-        while IFS=+ read -r hash time branch message; do                                            \
-            timelength=$(echo \"$time\" | sed -E \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
-            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
-            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"\";          \
-        done < <(git logx && echo);"'
-    vtree = !bash -c '"                                                                             \
-        while IFS=+ read -r hash time branch message; do                                            \
-            timelength=$(echo \"$time\" | sed -E \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
-            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
-            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"$message\";  \
-        done < <(git logx && echo);"'
+	continue =    "!f() { repo_path=$(git rev-parse --git-dir); if [ $? -ne 0 ]; then exit $?; fi; if [ -d \"${repo_path}/rebase-merge\" ]; then git rebase --continue; elif [ -d \"${repo_path}/rebase-apply\" ]; then git rebase --continue; elif [ -f \"${repo_path}/MERGE_HEAD\" ]; then git merge --continue; elif [ -f \"${repo_path}/CHERRY_PICK_HEAD\" ]; then git cherry-pick --continue; elif [ -f \"${repo_path}/REVERT_HEAD\" ]; then git revert --continue; else echo \"No something in progress?\" ;fi;};f"
 	cm = commit -m
 	amend = commit --amend
 
@@ -152,11 +145,16 @@
 	# Thin out older metadata within the repository, reduces filesystem footprint
 	trim = !git reflog expire --expire=now --all && git gc --prune=now
 	first = rev-list --max-parents=0 HEAD
-	deletebranch = branch -d
+	cfp = cat-file -p
+	forget = rm --cached
+	structurelog = slog --simplify-by-decoration --graph --all --tags
+	continu2 = "!f() { repo_path=$(git rev-parse --git-dir); if [ $? -ne 0 ]; then exit $?; fi; if [ -d \"${repo_path}/rebase-merge\" ]; then git rebase --continue; elif [ -d \"${repo_path}/rebase-apply\" ]; then git rebase --continue; elif [ -f \"${repo_path}/MERGE_HEAD\" ]; then git merge --continue; elif [ -f \"${repo_path}/CHERRY_PICK_HEAD\" ]; then git cherry-pick --continue; elif [ -f \"${repo_path}/REVERT_HEAD\" ]; then git revert --continue; else echo \"No something in progress?\" ;fi;};"
+	lome = log --author=\"jankrag\"
 [color]
 	ui = true
 [diff]
 	wordregex = [[:alnum:]]+|[^[:space:]]
+	guitool = kdiff3
 [color "diff"]
 #	new = cyan bold
 #    meta = yellow bold
@@ -215,3 +213,5 @@
 	version = 2
 [uploadpack]
 	allowFilter = true
+[init]
+	defaultBranch = master
