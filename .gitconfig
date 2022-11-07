@@ -1,6 +1,7 @@
 [user]
 	name = Jan Krag
 	email = jankrag@gmail.com
+	signingKey = 3153E6FCA7C3F153
 [core]
 	excludesfile = /Users/jankrag/.gitignore_global
 	quotepath = off
